@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login — Next Gen Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-wrap card">
+    <h2>Admin Login</h2>
+    <p class="small">This page is hidden from visitors — use your admin account to sign in.</p>
+    <input id="email" placeholder="admin email" />
+    <input id="password" type="password" placeholder="password" />
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button id="loginBtn" class="cta">Login</button>
+      <a href="index.html" class="muted">Back</a>
+    </div>
+    <div id="authMsg" class="small" style="margin-top:10px;color:var(--muted)"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
+    import { firebaseConfig } from './firebaseConfig.js';
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('loginBtn').addEventListener('click', async ()=>{
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if(!email || !password){document.getElementById('authMsg').textContent='Enter email and password';return}
+      try{
+        await signInWithEmailAndPassword(auth,email,password);
+        window.location.href='dashboard.html';
+      }catch(e){
+        document.getElementById('authMsg').textContent = 'Login failed: '+e.message;
+      }
+    });
+  </script>
+</body>
+</html>

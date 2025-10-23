@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Next Gen Game — Latest Game & Tech News</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <div class="logo-mark"><span>NG</span></div>
+          <div>
+            <div class="site-title">Next Gen Game</div>
+            <div class="site-sub">Game news • Tech • Reviews • Builds</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-right">
+        <div class="categories-row" id="categoriesRow">
+          <!-- categories injected here -->
+        </div>
+        <div class="search">
+          <input id="searchInput" placeholder="Search articles, games..." />
+          <button id="searchBtn">Go</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Big futuristic banner -->
+    <section class="banner">
+      <div class="banner-left">
+        <h1 id="bannerTitle">GTA VI — Latest Gameplay Update & Analysis</h1>
+        <p id="bannerSub">Deep dives, leaked gameplay breakdowns, patch notes and developer updates — all in one place.</p>
+        <a href="#gta6" class="cta">Read the story</a>
+      </div>
+      <div class="banner-right">
+        <div class="trending card">
+          <div style="font-weight:800">Trending</div>
+          <ul id="trendingList" style="padding-left:16px;color:var(--muted);margin-top:8px"></ul>
+        </div>
+      </div>
+    </section>
+
+    <main class="main">
+      <section class="content" id="view">
+        <!-- dynamic content injected here -->
+      </section>
+
+      <aside>
+        <div class="card latest-list">
+          <h4>Latest Articles</h4>
+          <div id="latestList"></div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="footer-grid">
+        <div>
+          <div style="font-weight:800">Next Gen Game</div>
+          <div class="small">© <span id="year"></span> Next Gen Game — All rights reserved</div>
+        </div>
+        <div style="text-align:right">
+          <div><a href="index.html#about">About</a> &nbsp;|&nbsp; <a href="index.html#contact">Contact</a></div>
+          <div class="small" style="margin-top:8px">Business: <a href="mailto:biz@nextgengame.com">biz@nextgengame.com</a></div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

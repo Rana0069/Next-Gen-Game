@@ -1,0 +1,74 @@
+:root{
+  --bg:#080808;
+  --card:#0f0f0f;
+  --accent:#ff0033;
+  --muted:#9a9a9a;
+  --glass: rgba(255,255,255,0.03);
+  --maxw:1100px;
+  --radius:12px;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#050505 0%, #090909 100%);color:#eaeaea}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:28px auto;padding:18px}
+
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ff3366);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(255,0,51,0.12);font-weight:900;font-family:'Orbitron',sans-serif}
+.logo-mark span{font-size:20px}
+.site-title{font-size:20px;font-weight:700;letter-spacing:1px}
+.site-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* Top right: search */
+.top-right{display:flex;align-items:center;gap:12px}
+.search{position:relative;margin-left:12px}
+.search input{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:10px 36px 10px 12px;border-radius:8px;color:inherit;outline:none;width:220px}
+.search button{position:absolute;right:4px;top:4px;background:transparent;border:0;color:var(--accent);font-weight:700;padding:6px}
+
+/* Categories row top-left */
+.categories-row{display:flex;gap:8px;align-items:center;margin-right:8px}
+.cat-btn{padding:8px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.02);cursor:pointer;font-weight:700;color:var(--muted)}
+
+/* Banner */
+.banner{margin-top:18px;background:linear-gradient(90deg, rgba(255,0,51,0.06), rgba(255,0,51,0.02));border-radius:14px;padding:22px;display:flex;gap:20px;align-items:center}
+.banner-left{flex:2}
+.banner-right{flex:1;min-width:220px}
+.banner h1{margin:0;font-size:28px;font-family:'Orbitron',sans-serif}
+.banner p{color:var(--muted);margin-top:8px}
+.cta{display:inline-block;margin-top:12px;padding:8px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#ff6699);color:#100; font-weight:800}
+
+/* Layout */
+.main{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:20px}
+.content{min-height:400px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.card{background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+.thumb{height:160px;border-radius:10px;background:#121212;display:flex;align-items:end;padding:12px;color:#fff;font-weight:700}
+.meta{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.category{padding:6px 8px;border-radius:8px;background:rgba(255,0,51,0.08);color:var(--accent);font-weight:700;font-size:12px}
+
+/* Sidebar */
+aside{position:sticky;top:20px}
+.latest-list h4{margin:0 0 8px 0}
+.small{color:var(--muted);font-size:13px}
+
+/* Auth page */
+.auth-page{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(180deg, rgba(255,0,51,0.03), transparent)}
+.auth-wrap{width:360px;padding:20px;text-align:left}
+
+/* Forms */
+input, textarea, select{background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:inherit;padding:10px;border-radius:8px;outline:none;font-size:14px}
+textarea{min-height:120px;resize:vertical}
+
+/* Buttons */
+button{cursor:pointer;border:0;padding:8px 12px;border-radius:8px}
+.cta{background:linear-gradient(90deg,var(--accent),#ff6699);color:#100;font-weight:800;border:0}
+.muted{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:8px;border-radius:8px}
+
+/* Posts table for admin */
+.post-row{padding:8px}
+
+/* Responsive */
+@media (max-width:900px){.grid{grid-template-columns:1fr}.main{grid-template-columns:1fr}.search input{width:140px}.banner{flex-direction:column}.banner-right{display:none}}

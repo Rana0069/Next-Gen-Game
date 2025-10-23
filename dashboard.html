@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Next Gen Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="logo-mark"><span>NG</span></div>
+        <div style="font-weight:800">Admin Dashboard</div>
+      </div>
+      <div>
+        <button id="logoutBtn" class="muted">Logout</button>
+      </div>
+    </header>
+
+    <main class="card" style="padding:16px">
+      <h3>Add / Edit Post</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+        <input id="postTitle" placeholder="Title" />
+        <select id="postCategory">
+          <option value="latest_gaming">Latest Gaming</option>
+          <option value="latest_tech">Latest Tech</option>
+          <option value="top_10">Top 10</option>
+          <option value="gta6">GTA 6</option>
+        </select>
+        <input id="thumbUrl" placeholder="Thumbnail URL (optional)" />
+        <input id="externalLink" placeholder="External link (optional)" />
+        <textarea id="postDesc" placeholder="Short description / excerpt" style="grid-column:1/3"></textarea>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button id="publishBtn" class="cta">Publish</button>
+        <button id="updateBtn" class="muted" style="display:none">Update</button>
+        <button id="clearBtn" class="muted">Clear</button>
+      </div>
+
+      <hr style="margin:18px 0" />
+      <h3>Existing Posts</h3>
+      <div id="postsTable"></div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
+    import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, getDocs, deleteDoc, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+    import { firebaseConfig } from './firebaseConfig.js';
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const publishBtn = document.getElementById('publishBtn');
+    const updateBtn = document.getElementById('updateBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    let editing = null;
+
+    onAuthStateChanged(auth, user => {
+      if(!user) window.location.href='admin.html';
+      else loadAllPosts();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{ signOut(auth); });
+
+    async function loadAllPosts(){
+      const collections = ['latest_gaming','latest_tech','top_10','gta6'];
+      const container = document.getElementById('postsTable');
+      container.innerHTML = '<div class="small">Loading...</div>';
+      let html = '';
+      for(const col of collections){
+        const q = query(collection(db,col), orderBy('createdAt','desc'));
+        const snap = await getDocs(q);
+        if(snap.empty) continue;
+        html += `<div style="margin-top:8px"><h4 style="text-transform:capitalize">${col.replace('_',' ')}</h4>`;
+        snap.forEach(docSnap=>{
+          const d = docSnap.data();
+          const id = docSnap.id;
+          html += `<div class="post-row card" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px">
+                     <div style="flex:1"><strong>${d.title}</strong><div class="small">${d.excerpt||''}</div></div>
+                     <div style="display:flex;gap:8px">
+                       <button class="editBtn" data-id="${id}" data-col="${col}">Edit</button>
+                       <button class="deleteBtn" data-id="${id}" data-col="${col}">Delete</button>
+                     </div>
+                   </div>`;
+        });
+        html += '</div>';
+      }
+      container.innerHTML = html;
+      attachPostButtons();
+    }
+
+    function attachPostButtons(){
+      document.querySelectorAll('.deleteBtn').forEach(b=>{
+        b.addEventListener('click', async ()=>{
+          if(!confirm('Delete this post?')) return;
+          const id = b.dataset.id, col = b.dataset.col;
+          await deleteDoc(doc(db,col,id));
+          loadAllPosts();
+        });
+      });
+      document.querySelectorAll('.editBtn').forEach(b=>{
+        b.addEventListener('click', async ()=>{
+          const id = b.dataset.id, col = b.dataset.col;
+          const dref = doc(db,col,id);
+          const snap = await getDoc(dref);
+          if(!snap.exists()) return alert('Not found');
+          const data = snap.data();
+          document.getElementById('postTitle').value = data.title||'';
+          document.getElementById('postCategory').value = col;
+          document.getElementById('thumbUrl').value = data.thumb||'';
+          document.getElementById('externalLink').value = data.link||'';
+          document.getElementById('postDesc').value = data.excerpt||'';
+          editing = {id,col};
+          updateBtn.style.display='inline-block';
+          publishBtn.style.display='none';
+        });
+      });
+    }
+
+    publishBtn.addEventListener('click', async ()=>{
+      const title = document.getElementById('postTitle').value.trim();
+      const category = document.getElementById('postCategory').value;
+      const thumb = document.getElementById('thumbUrl').value.trim();
+      const link = document.getElementById('externalLink').value.trim();
+      const excerpt = document.getElementById('postDesc').value.trim();
+      if(!title) return alert('Title required');
+      const colRef = collection(db,category);
+      await addDoc(colRef, { title, thumb, link, excerpt, createdAt: serverTimestamp() });
+      clearForm();
+      loadAllPosts();
+    });
+
+    updateBtn.addEventListener('click', async ()=>{
+      if(!editing) return;
+      const title = document.getElementById('postTitle').value.trim();
+      const category = document.getElementById('postCategory').value;
+      const thumb = document.getElementById('thumbUrl').value.trim();
+      const link = document.getElementById('externalLink').value.trim();
+      const excerpt = document.getElementById('postDesc').value.trim();
+      const ref = doc(db, editing.col, editing.id);
+      await updateDoc(ref, { title, thumb, link, excerpt });
+      editing = null;
+      publishBtn.style.display='inline-block';
+      updateBtn.style.display='none';
+      clearForm();
+      loadAllPosts();
+    });
+
+    clearBtn.addEventListener('click', clearForm);
+    function clearForm(){ document.getElementById('postTitle').value=''; document.getElementById('postCategory').value='latest_gaming'; document.getElementById('thumbUrl').value=''; document.getElementById('externalLink').value=''; document.getElementById('postDesc').value=''; editing=null; publishBtn.style.display='inline-block'; updateBtn.style.display='none'; }
+
+  </script>
+</body>
+</html>
