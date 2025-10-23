@@ -54,7 +54,7 @@ async function loadHome(){
                     <div style="margin-top:12px"><a href="index.html#post/${featured.col}/${featured.doc.id}" class="cta">Read more</a></div>
                   </div>
                   <div style="flex:1">
-                    <div class="thumb">${fd.title}</div>
+                    <div class="thumb"><img src="${fd.thumbnailURL}" alt="${fd.title}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px"></div>
                   </div>
                 </div>
               </section>`;
@@ -80,7 +80,7 @@ async function loadHome(){
   html += '<div class="grid">';
   cards.slice(0,6).forEach(p=>{
     html += `<article class="card">
-              <div class="thumb">${p.title}</div>
+              <div class="thumb"><img src="${p.thumbnailURL}" alt="${p.title}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px"></div>
               <div style="margin-top:10px">
                 <div style="font-weight:800">${p.title}</div>
                 <div class="meta"><div class="category">${p._colTitle}</div><div class="small">${p._col}</div></div>
@@ -141,7 +141,7 @@ async function loadCategory(colKey){
     snap.forEach(docSnap=>{
       const d = docSnap.data(); const id=docSnap.id;
       html += `<article class="card">
-                <div class="thumb">${d.title}</div>
+                <div class="thumb"><img src="${d.thumbnailURL}" alt="${d.title}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px"></div>
                 <div style="margin-top:10px">
                   <div style="font-weight:800">${d.title}</div>
                   <div class="meta"><div class="category">${c.title}</div></div>
@@ -173,7 +173,7 @@ async function applySearch(){
   let html = '<div class="grid">';
   results.slice(0,12).forEach(p=>{
     html += `<article class="card">
-              <div class="thumb">${p.title}</div>
+              <div class="thumb"><img src="${p.thumbnailURL}" alt="${p.title}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px"></div>
               <div style="margin-top:10px">
                 <div style="font-weight:800">${p.title}</div>
                 <div class="meta"><div class="category">${p._colTitle}</div></div>
